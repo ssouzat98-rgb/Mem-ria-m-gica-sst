@@ -1,0 +1,41 @@
+name: Gerar APK Android
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar arquivos
+        uses: actions/checkout@v4
+
+      - name: Preparar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Extrair projeto
+        run: |
+          unzip -o MemoriaMagicaAndroid.zip
+          cd MemoriaMagicaAndroid
+          echo "PROJECT_DIR=$PWD" >> $GITHUB_ENV
+
+      - name: Preparar Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.1.0'
+
+      - name: Compilar APK
+        run: gradle -p "$PROJECT_DIR" assembleDebug
+
+      - name: Guardar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Memoria-Magica-TSS
+          path: MemoriaMagicaAndroid/app/build/outputs/apk/debug/app-debug.apk
