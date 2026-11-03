@@ -23,6 +23,7 @@ jobs:
       - name: Extrair projeto
         run: |
           unzip -o MemoriaMagicaAndroid.zip
+          find MemoriaMagicaAndroid -name '*.gradle.kts' -type f -exec sed -i 's/9\.0\.0/9.1.0/g' {} +
           cd MemoriaMagicaAndroid
           echo "PROJECT_DIR=$PWD" >> $GITHUB_ENV
 
